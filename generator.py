@@ -2,18 +2,18 @@ import torch.nn as nn
 
 
 class Generator(nn.Module):
-    def __init__(self, input_dim, image_dim):
+    def __init__(self, z_dim, img_dim):
         super().__init__()
-        self.model = nn.sequential(
-            nn.Linear(input_dim, 128),
-            nn.ReLU(),
-            nn.Dropout(0.1),
-            nn.Linear(128, 256),
-            nn.ReLU(),
-            nn.Dropout(0.1),
-            nn.Linear(256, image_dim),
-            nn.Tanh()
+        self.gen = nn.Sequential(
+            nn.Linear(z_dim, 512),
+            nn.BatchNorm1d(512),
+            nn.LeakyReLU(0.01),
+            nn.Linear(512, 256),
+            nn.BatchNorm1d(256),
+            nn.LeakyReLU(0.01),
+            nn.Linear(256, img_dim),
+            nn.Tanh(),
         )
 
     def forward(self, x):
-        return self.model(x)
+        return self.gen(x)
